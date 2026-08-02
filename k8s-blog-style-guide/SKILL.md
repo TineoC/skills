@@ -28,7 +28,7 @@ for anything under `content/en/blog/`.
 | General docs rule | Blog exception |
 |---|---|
 | Avoid "we" — docs describe the system, not the authors | OK to use "we" in an article with multiple authors, or where the intro makes clear the author writes on behalf of a group (e.g. a release team) |
-| Don't state future intentions ("will be able to") | OK, but "used with care" in official announcements written on behalf of Kubernetes |
+| Don't state future intentions ("will be able to") | OK, but "used with care" in official announcements written on behalf of Kubernetes — see the hedging rules below for anything not yet locked in |
 | No `{{</* code_sample */>}}` shortcode requirement | Code samples don't need the shortcode; often clearer without it |
 | Follow a consistent, neutral voice | OK for authors to write in their own style, as long as the point comes across |
 | — | Never use Kubernetes callout shortcodes (`{{</* note/caution/warning */>}}`) — those target docs readers, blog articles aren't documentation |
@@ -109,3 +109,41 @@ Not officially documented, but consistent across the last 3 cycles — verify ag
 - **Slug** always includes the `v`: `kubernetes-v1-36-sneak-peek`, not `kubernetes-1-36-sneak-peek`.
 - **Title** pattern: `'Kubernetes vX.Y Sneak Peek'` (capitalized, with `v`, no colon) for sneak peeks; `"Kubernetes vX.Y: <Release Codename>"` for release announcements.
 - **`date` placeholder in practice diverges from the official guide above**: v1.35 and v1.36 sneak-peek drafts *did* use `date: YYYY-XX-XX` as a placeholder (contradicting the "don't do this" guidance), while v1.34's draft set the real target date immediately. Both the filename and the `date` field should stay consistent with whichever choice is made — check with the current cycle's Release Comms lead/editor rather than assuming.
+- **"Want to know more?" footer — which past releases to list**: no documented rule, and it has drifted cycle to cycle (v1.36 listed back through 1.30, v1.35 listed 1.34–1.30, v1.34 listed none). The recurring reviewer preference is to list only releases still inside the support window (not EOL) — check the [supported releases list](https://kubernetes.io/releases/patch-releases/#detailed-release-history-for-active-branches) at write time rather than copying the previous cycle's list verbatim.
+
+## Sneak-peek & release-comms writing lessons (empirical, from the v1.37 sneak-peek review — [kubernetes/website#56573](https://github.com/kubernetes/website/pull/56573))
+
+Not in the official guide, but consistent, repeated reviewer feedback across a full review cycle. Verify these still hold against the current cycle's reviewers before assuming — Release Comms conventions evolve release to release.
+
+**Hedge anything not locked in, especially deprecation claims:**
+- Don't write "X is deprecated" (present tense) unless it's *actually* deprecated already. If a deprecation is only planned or likely, say so explicitly: "not yet deprecated, but likely to be deprecated in a future release" — never let a reader come away thinking a decision has been made when it hasn't.
+- Before asserting *any* future deprecation for a long-stable API or feature, check with the team that actually owns it. A beta API that's been stable for years may have no realistic deprecation plan at all — in that case, cut the deprecation mention entirely rather than speculate ("I would remove any mention of deprecation, it is unrealistic at this point in time" — a project maintainer, on `metrics.k8s.io` v1beta1).
+- Even for **featured enhancements** (not deprecations), write as if nothing is confirmed until GA: prefer "expected to graduate to Beta" / "we expect the API to reach GA" over a bare present-tense claim. Do this *even though* the post carries a top-of-article disclaimer that details may change — assume a large fraction of readers skip that disclaimer and take the body text at face value.
+- Planned **deprecations** can be stated with more confidence than planned **features** — a deprecation timeline that's already KEP-approved is a commitment; a feature graduating to Beta/GA is not, until it actually does.
+- A KEP/feature can silently drop out of the release milestone *after* a sneak-peek PR describing it was opened (e.g. missing code freeze). Re-check every featured KEP against the actual `kubernetes/enhancements` milestone immediately before merge, and cut any section for a KEP that's no longer in-milestone.
+
+**Don't expose KEP mechanics to end users:**
+- Never put "KEP #NNNN:" (or any KEP number) in a section heading or in the highlighted description text — typical readers don't know or care what a KEP is, and a KEP number reads as more official/permanent than the actual level of certainty.
+- KEP numbers/links belong only in the "learn more" pointer at the end of a section (e.g. "To learn more about this enhancement, refer to [KEP-1432: Volume Health Monitor](...)").
+- A feature-removal item should never be framed as if the removal itself went through a highlighted enhancement process — that reads as celebrating a removal.
+
+**Section placement — don't misattribute a change to the current release:**
+- A bug fix that happens to close off previously-unsupported behavior (e.g. removing an incidental capability that was never officially supported) is not a "deprecation" or "removal" for that release — don't list it under "Deprecations and removals for Kubernetes vX.Y". Frame it separately as a fix.
+- Anything describing a **future** release's change (not the release the post is about) needs its own clearly-labeled section — never let it sit under "Deprecations and removals for Kubernetes vX.Y", since readers will (reasonably) assume everything under that heading is relevant to the current release. Put the word "future" directly in that section's heading (e.g. "Future removal of cgroup v1 support").
+
+**Terminology & consistency:**
+- Wrap Kubernetes component, tool, and command names in code style consistently (`kubelet`, `kube-proxy`, `ipvs`, `iptables`) per the [general style guide's code-style rule](https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-kubernetes-command-tool-and-component-names) — this applies to blog posts too, it isn't a docs-only rule.
+- Cite the Kubernetes **version** a feature/flag was introduced in, not a calendar year ("introduced in v1.8", not "introduced in 2017") — and verify the exact version against the feature's KEP/history rather than approximating from memory (this thread churned through v1.8/v1.9/2017 across multiple rounds of review before landing on the KEP-verified version).
+- Pick one casing convention for stability stages (Alpha/Beta/Stable vs. alpha/beta/stable) and apply it everywhere in the same article — don't mix cases across sections.
+- For a term with more than one plausible form (e.g. "cgroup v2" vs "cgroups v2"), match whatever form the authoritative KEP uses, and stay consistent with that choice throughout the article.
+
+**Trim, don't pad:**
+- If a feature's blog paragraph just repeats detail already covered elsewhere in the same section (or better covered in the feature's own dedicated deep-dive blog post), cut or refactor it — a sneak peek should summarize and point outward, not reproduce implementation detail.
+- Split long sentences that cram multiple ideas behind a colon into separate sentences — reviewers flag these consistently as hard to read.
+- Small formatting nits reviewers actually catch: missing space after a colon in link text (`KEP-4960:Container` → `KEP-4960: Container`); a multi-item dated timeline reads better as a list than as one run-on sentence.
+
+**Community/contributor CTAs:**
+- Don't point new contributors to the contributor-comms meeting — it's already overloaded. Point to **New Contributor Orientation** (run by SIG Contributor Experience / ContribEx) instead.
+- For an "share your experience" CTA, link to the [CNCF End User Story / case-studies page](https://www.cncf.io/case-studies/) rather than inventing a different venue.
+
+**Fact-check the small stuff:** verify official handles/links (e.g. the project's actual Bluesky handle) before publishing — don't assume a link someone typed from memory is correct.
