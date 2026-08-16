@@ -20,10 +20,11 @@ Apply these rules when writing or editing Kubernetes-flavored documentation. Lan
 - API objects: UpperCamelCase (`PersistentVolume`, `HorizontalPodAutoscaler`).
 - Placeholders: angle brackets, explained — `kubectl describe pod <pod-name> -n <namespace>`.
 - UI elements: **bold** — Click **Fork**.
-- New/defined terms: _italics_ on first introduction — a _cluster_ is a set of nodes.
+- New/defined terms: _italics_ on first introduction — a _cluster_ is a set of nodes. Feature and concept names go here too, italic and lowercase (`_gang scheduling_`, `_memory QoS_`) — never Title Case them.
 - Filenames, directories, paths: code style — `envars.yaml`, `/docs/tutorials`.
 - Quotation punctuation: period/comma outside the quotes — recorded with an associated "stage".
-- Graduation phases (Alpha/Beta/Stable/Deprecated): Start Case, capitalized — "DRA is Beta," not "beta."
+- Graduation phases (Alpha/Beta/Stable/Deprecated): Start Case, capitalized — "DRA is Beta," not "beta." These are the *only* thing that gets Start Case mid-sentence.
+- API kind spelling wins over an upstream title that uses spaces — write HorizontalPodAutoscalers and ClusterTrustBundle even if the KEP or doc being cited says "Horizontal Pod Autoscalers" / "Cluster Trust Bundle".
 
 ## Code style vs. plain text
 
@@ -96,6 +97,7 @@ Resource type names are lowercase and code-formatted: `pods`, `services`, `names
 - Sentence-style capitalization for headings (`## Configuring a probe`, not `## Configuring A Probe`).
 - One idea per paragraph; keep paragraphs short.
 - Descriptive link text, never "click here"; relative paths for internal links (`/docs/concepts/overview/`), absolute URLs for external ones.
+- Never break a line inside `[text](url)` — it renders fine but breaks GitHub suggestions and makes review harder. Let the line run long.
 - `-` for unordered lists, `1.` for sequential/ordered steps.
 - Pipe tables with a header separator row (`|---|---|`).
 - Don't nest Hugo shortcodes (`{{< note >}}`, `{{< caution >}}`, `{{< warning >}}`) inside numbered lists or `{{% include %}}` statements — they don't render correctly there; use plain Markdown instead.

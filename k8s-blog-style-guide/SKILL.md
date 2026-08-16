@@ -1,6 +1,6 @@
 ---
 name: k8s-blog-style-guide
-description: Kubernetes blog contribution guide — content eligibility, the docs-style-guide exceptions that apply to blog articles ("we" is OK, future tense is OK), front matter conventions, the release-comms process, and empirical front matter patterns for release-announcement and sneak-peek posts, sourced from kubernetes.io/docs/contribute/blog. Invoke by name when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements).
+description: Kubernetes blog contribution guide — content eligibility, the docs-style-guide exceptions that apply to blog articles ("we" is OK, future tense is OK), front matter conventions, the release-comms process, empirical front matter patterns for release-announcement and sneak-peek posts, and (in release-announcement.md) the body conventions and pre-review checklist for release announcements, sourced from kubernetes.io/docs/contribute/blog. Invoke by name when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements).
 disable-model-invocation: true
 ---
 
@@ -33,6 +33,46 @@ for anything under `content/en/blog/`.
 | Follow a consistent, neutral voice | OK for authors to write in their own style, as long as the point comes across |
 | — | Never use Kubernetes callout shortcodes (`{{</* note/caution/warning */>}}`) — those target docs readers, blog articles aren't documentation |
 | [Diagram guide](https://kubernetes.io/docs/contribute/style/diagram-guide/) targets docs | Good to align with it, but no need to caption diagrams as "Figure 1", "Figure 2", etc. |
+
+## General style guide rules that still apply — and are easy to get backwards
+
+These are *not* blog exceptions. They come from the general style guide, so they
+apply to blogs as "should". They are listed here because they contradict habits
+carried in from other projects, and because a reviewer who "corrects" them is
+introducing an error rather than fixing one. Check the anchor before flagging.
+
+- **[Start case for enhancement graduation phases](https://kubernetes.io/docs/contribute/style/style-guide/#use-start-case-for-enhancement-graduation-phases)**
+  — Alpha, Beta, GA are capitalized. Do: "Dynamic Resource Allocation (DRA) is
+  Beta." Don't: "…is beta." This holds for feature gates too: "the Alpha
+  `FooBar` feature gate". Do not "fix" a capitalized Alpha/Beta to lowercase.
+- **[Code style for command tool and component names](https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-kubernetes-command-tool-and-component-names)**
+  — component names take backticks. Do: "The `kubelet` preserves node
+  stability." Don't: "The kubelet preserves node stability." Same for
+  `kubectl`, `kube-apiserver`, `kubeadm`. A post that mixes `` `kubelet` ``
+  and bare `kubelet` should be normalized *toward* backticks, not away.
+- **[Starting a sentence with a component name](https://kubernetes.io/docs/contribute/style/style-guide/#starting-a-sentence-with-a-component-tool-or-component-name)**
+  — lead with an article or descriptor: "The `kubeadm` tool bootstraps…", not
+  "`kubeadm` tool bootstraps…".
+- **[API kinds are written verbatim, no backticks](https://kubernetes.io/docs/contribute/style/style-guide/#use-code-style-for-inline-code-commands)**
+  — StatefulSet, ConfigMap, PersistentVolume are plain text (this is what lets
+  you write "the CustomResourceDefinition's `.spec.group` field"). Field names
+  and paths *do* take backticks. The API kind spelling wins even when a KEP
+  title spells it with spaces: "Configurable tolerance for
+  HorizontalPodAutoscalers", `ClusterTrustBundle` not "Cluster Trust Bundle".
+- **[Italics for new terms](https://kubernetes.io/docs/contribute/style/style-guide/#use-italics-to-define-or-introduce-new-terms)**
+  — a feature or concept on first mention is _italic and lowercase_
+  (`_gang scheduling_`, `_memory QoS_`, `_native histograms_`). Title Case is
+  for graduation phases *only*; Title-Casing a feature name is the most common
+  way to get the previous rule backwards.
+- **Sentence-case headings** — `## Configuring a probe`, not `## Configuring A
+  Probe`. Blogs get the general style guide as "should", but release
+  announcements are high-profile and reviewers hold them to it hard.
+- **Never break a line inside `[...]` or `(...)`** — a hard-wrapped link still
+  renders, but it breaks GitHub suggestions and makes prose review painful.
+
+Before writing a style comment on any of the above, open the anchor and read the
+Do/Don't table. Guessing from general English or from other projects' house
+style produces confident, wrong review feedback.
 
 ## Content eligibility
 
@@ -85,6 +125,10 @@ For articles announcing a specific release's changes (release announcements, sne
 - You may not get an individual writing buddy; a Release Comms team member guides you instead.
 - Must stay `draft: true` — the PR can merge any time during the cycle.
 - Publish PRs carry a **`do-not-merge/hold`** label and stay held until the release actually happens, even once approved/LGTM'd.
+
+For the *body* of a release announcement — tense, headings, KEP/SIG boilerplate,
+feature-gate call-outs, and the pre-review checklist — see
+[release-announcement.md](release-announcement.md).
 
 ## Front matter conventions observed in recent release-cycle posts (v1.34–v1.36)
 
