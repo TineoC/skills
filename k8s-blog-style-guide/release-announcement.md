@@ -5,8 +5,8 @@ file covers the *body* of a release announcement (`kubernetes-vX-Y-release`).
 
 Derived from the review of
 [kubernetes/website#56990](https://github.com/kubernetes/website/pull/56990) (v1.37 announcement):
-128 review threads across 11 reviews, nearly all of them the same dozen rules applied over and
-over. Applying this file before requesting review frees reviewers to check technical accuracy
+330+ review threads across the full review cycle, nearly all of them the same dozen rules applied
+over and over. Applying this file before requesting review frees reviewers to check technical accuracy
 instead of mechanics.
 
 ## Tense and framing
@@ -39,9 +39,16 @@ Write as if the release **has already happened**. The announcement is read after
   #### DRA: ResourceClaim status with possible standardized network interface data
   #### DRA: derived attributes
   ```
-- Add an explicit `{#anchor}` on any heading likely to be deep-linked from release notes or
-  social posts, especially long ones:
-  `### DRA: ResourceClaim support for workloads {#resourceclaim-support-for-workloads}`.
+- Add an explicit `{#anchor}` on **every** feature heading, not just long ones. Hugo's generated
+  anchors churn whenever the heading text is edited, and release notes and social posts deep-link
+  these sections: `### DRA: ResourceClaim support for workloads {#resourceclaim-support-for-workloads}`.
+  Reviewers in #56990 attached an anchor to essentially every heading suggestion they made.
+- Component names keep their backticks inside headings, and the heading is still sentence case:
+  `` ### `kubelet`: static Pods can no longer reference Secrets or ConfigMaps ``, not
+  "### Kubelet: Static Pods…". Same for `` ### Deprecating `kube-proxy`'s support for `ipvs` mode ``.
+- **No two headings with the same text.** The v1.37 draft used
+  "Graduations, deprecations, and removals in v1.37" twice; rename the earlier one after the
+  previous cycle's announcement.
 
 ## Naming and emphasis
 
@@ -71,14 +78,24 @@ Each of these was hand-corrected more than a dozen times in #56990. Write them r
 **KEP attribution**, one per feature section, no line break inside the link:
 
 ```markdown
-This work was done as part of [KEP #NNNN: Exact KEP title](https://www.kubernetes.dev/resources/keps/NNNN/) led by [SIG Foo](https://www.kubernetes.dev/community/community-groups/sigs/foo/).
+This work was done as part of [KEP #NNNN](https://www.kubernetes.dev/resources/keps/NNNN/) led by [SIG Foo](https://www.kubernetes.dev/community/community-groups/sigs/foo/).
 ```
 
+- **Link text is `KEP #NNNN` — number only, no KEP title, no `KEP-NNNN` hyphen form.** The v1.37
+  draft mixed all three; the review converged on the bare `KEP #NNNN` form used by previous
+  announcements, and every remaining title and hyphen was suggested away. Apply it in
+  "learn more"/deprecation pointers too (`refer to [KEP #5573](…)`, not `[KEP-5573: Remove cgroup
+  v1 support](…)`). This differs from the sneak-peek convention in SKILL.md, which does spell out
+  the KEP title.
 - Verify the KEP number against `kubernetes/enhancements`. One thread caught a wrong number that
   had survived to review.
 - Two owning SIGs: `led by [SIG Node](…) and [SIG Network](…).`
-- **Never break a line inside `[...]` or `(...)`.** Hard-wrapped links still render, but they
-  break GitHub suggestions and make review painful — this was flagged repeatedly.
+- **Never break a line inside `[...]` or `(...)`.** This is the single most-repeated mechanical
+  defect in #56990 — roughly a dozen threads, several with preview screenshots showing the link
+  rendering as literal text `[KEP #2021] (https://…)`. It breaks the rendered page, not just
+  GitHub suggestions.
+- **Internal links are site-relative**: `/releases/1.37/`, `/blog/2026/07/31/kubernetes-v1-37-sneak-peek/`,
+  `/docs/tutorials/` — not `https://kubernetes.io/...`.
 
 **Feature gate state.** Say it explicitly for every feature; reviewers asked for it every time it
 was missing.
@@ -103,9 +120,49 @@ because `https://kubernetes.io/releases/a.bb/` did not exist yet.
 - Follow us on [X](https://x.com/kubernetesio)
 ```
 
+## Mechanics that generate the most review threads
+
+Every item here was corrected many times over in #56990. A single self-review pass on these
+removes most of the review volume.
+
+- **Wrap source Markdown at ~80 characters** — [style guide: line
+  breaks](https://kubernetes.io/docs/contribute/style/style-guide/#line-breaks). Reviewers asked
+  for this across the whole document. It does not conflict with the never-split-a-link rule: wrap
+  at a word boundary *outside* every `[...](...)`, and let a long link overrun 80 characters
+  rather than split it.
+- **Backtick every component, tool, and daemon name, everywhere** — this was the single largest
+  category of suggestions. The list that actually got flagged: `kubelet`, `kubectl`,
+  `kube-apiserver`, `kube-proxy`, `kube-controller-manager`, `kube-dns`, `etcd`, `cAdvisor`,
+  `nftables`, `nft`, `iptables`, `ipvs`, `kubeadm`. `etcd` and `cAdvisor` are the two that
+  drafters most reliably leave bare.
+- **Every fenced code block declares a language** — ```` ```shell ````, ```` ```yaml ````. A bare
+  ```` ``` ```` was flagged on sight.
+- **U.S. English**, confirmed by SIG Docs leads on this PR: "fulfill", not "fulfil".
+- **Proofread pass for the dumb stuff**: doubled words ("support for for cluster
+  administrators"), space before a colon ("promoted to Stable :"), stray blank lines mid-paragraph,
+  trailing whitespace, `KEP-4960:Container` with no space after the colon.
+- **Thousands separator on contributor counts**: "1,709 individuals", not "1709".
+
+## Getting technical accuracy reviewed
+
+Style review and accuracy review are separate jobs, and the second one does not happen on its own.
+The workflow that worked in #56990:
+
+- Post a review comment on **each feature section's heading** with `/cc` and the handles of that
+  KEP's authors plus the owning SIG's leads — for example `/cc @pohly @everpeace` on the DRA
+  taints section. One comment per section, so the reply lands in context.
+- Pull the handles from the KEP's `authors`/`owning-sig` metadata in `kubernetes/enhancements` and
+  the SIG's `sigs.yaml` leads, not from memory.
+- Expect this to surface things no style pass can: a feature that graduated to Beta but shipped
+  **disabled** by default after a late revert, a "graduation" that partly happened two releases
+  ago, an "X has no visibility into Y" framing that overstates the old limitation, missing Node
+  condition names, wrong bucket-boundary wording.
+- KEP authors answer with `lgtm` or a rewrite of the paragraph. Take the rewrite — they are
+  describing their own feature.
+
 ## Pre-review checklist
 
-Run this before requesting review. It is where most of the 128 threads came from.
+Run this before requesting review. It is where most of the 330+ threads came from.
 
 1. **Diff against the previous cycle's announcement** — structure, section order, and the wording
    of the recurring paragraphs (intro, download, release team, project velocity, social). Reviewers
@@ -121,7 +178,26 @@ Run this before requesting review. It is where most of the 128 threads came from
    pretend that they are _well known_." Same for "significant", "major", "widely used".
 6. **Get the owning SIG to check each section's framing.** Style passes cannot catch this. Real
    examples from #56990: DRA network devices were described as merely improved when they were
-   basically unusable before; a kube-proxy efficiency gain in *rule management* read as if it were
+   basically unusable before; a `kube-proxy` efficiency gain in *rule management* read as if it were
    packet-routing throughput; a component described as pending a split that had already happened.
 7. **Read every section as a user who has not read the KEP.** If a sentence only makes sense to
    someone who has, rewrite it.
+8. **Check each "graduates to Stable/Beta" claim against the previous announcements.** A KEP can
+   carry several feature gates that graduate in different releases — v1.37 credited "resilient
+   watch cache initialization" as newly Stable when one of its two gates went Stable back in
+   v1.34. Either state precisely which gate graduated now, or pick a different spotlight.
+9. **Confirm the default state as of code freeze, not as of the KEP.** Pod-level resource managers
+   graduated to Beta *disabled* by default after a late fix; cAdvisor-less stats went Beta
+   off-by-default. Say "Beta, off by default" explicitly when that is the case.
+10. **Name what is new in *this* release for multi-release work.** For a feature that has been Beta
+    for two cycles, say what this cycle added (circuit breaking, extra metrics) rather than
+    re-announcing the feature.
+11. **Freeze the project-velocity numbers and their links.** The devstats links must use an
+    explicit `to=<timestamp>`, never `to=now`, or the numbers in the prose drift away from the
+    dashboard. Refresh the contributor/company counts right before merge — they moved during
+    review — and phrase them as a maximum at any given time.
+12. **Download section: no interactive tutorials.** Katacoda has been gone since 2023; link
+    `/docs/tutorials/`, minikube, and kubeadm. The
+    [release-blog template](https://github.com/kubernetes/sig-release/blob/master/release-team/role-handbooks/communications/templates/release-blog.md)
+    still carries the stale wording twice — fix it there too rather than re-inheriting it next
+    cycle.

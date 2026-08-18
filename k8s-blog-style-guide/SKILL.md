@@ -67,8 +67,12 @@ introducing an error rather than fixing one. Check the anchor before flagging.
 - **Sentence-case headings** — `## Configuring a probe`, not `## Configuring A
   Probe`. Blogs get the general style guide as "should", but release
   announcements are high-profile and reviewers hold them to it hard.
-- **Never break a line inside `[...]` or `(...)`** — a hard-wrapped link still
-  renders, but it breaks GitHub suggestions and makes prose review painful.
+- **[Wrap source lines at ~80 characters](https://kubernetes.io/docs/contribute/style/style-guide/#line-breaks)**
+  — reviewers ask for it on long-form posts, and it keeps diffs and GitHub
+  suggestions reviewable.
+- **Never break a line inside `[...]` or `(...)`** — a hard-wrapped link renders
+  as literal text (`[KEP #2021] (https://…)`) and breaks the published page, not
+  just GitHub suggestions. Let the link overrun 80 characters instead.
 
 Before writing a style comment on any of the above, open the anchor and read the
 Do/Don't table. Guessing from general English or from other projects' house
