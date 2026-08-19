@@ -1,6 +1,6 @@
 ---
 name: k8s-blog-style-guide
-description: Kubernetes blog contribution guide — content eligibility, the docs-style-guide exceptions that apply to blog articles ("we" is OK, future tense is OK), front matter conventions, the release-comms process, empirical front matter patterns for release-announcement and sneak-peek posts, and (in release-announcement.md) the body conventions and pre-review checklist for release announcements, sourced from kubernetes.io/docs/contribute/blog. Invoke by name when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements).
+description: Kubernetes blog contribution guide — content eligibility, the docs-style-guide exceptions that apply to blog articles ("we" is OK, future tense is OK), front matter conventions, the release-comms process, empirical front matter patterns for release-announcement and sneak-peek posts, and (in release-announcement.md) the body conventions, pre-review checklist, and the reviewer workflow for splitting cosmetic suggestions from technical claims and tagging KEP/feature owners, sourced from kubernetes.io/docs/contribute/blog. Invoke by name when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements).
 disable-model-invocation: true
 ---
 
@@ -158,6 +158,21 @@ Not officially documented, but consistent across the last 3 cycles — verify ag
 - **Title** pattern: `'Kubernetes vX.Y Sneak Peek'` (capitalized, with `v`, no colon) for sneak peeks; `"Kubernetes vX.Y: <Release Codename>"` for release announcements.
 - **`date` placeholder in practice diverges from the official guide above**: v1.35 and v1.36 sneak-peek drafts *did* use `date: YYYY-XX-XX` as a placeholder (contradicting the "don't do this" guidance), while v1.34's draft set the real target date immediately. Both the filename and the `date` field should stay consistent with whichever choice is made — check with the current cycle's Release Comms lead/editor rather than assuming.
 - **"Want to know more?" footer — which past releases to list**: no documented rule, and it has drifted cycle to cycle (v1.36 listed back through 1.30, v1.35 listed 1.34–1.30, v1.34 listed none). The recurring reviewer preference is to list only releases still inside the support window (not EOL) — check the [supported releases list](https://kubernetes.io/releases/patch-releases/#detailed-release-history-for-active-branches) at write time rather than copying the previous cycle's list verbatim.
+
+## Reviewing a blog PR
+
+Two rules that decide how review feedback lands, detailed in
+[release-announcement.md](release-announcement.md):
+
+- **Sort every change into cosmetic or technical before posting.** Cosmetic (whitespace, backticks,
+  heading case, broken link syntax, typos, rewraps) goes up as pure ```suggestion blocks with no
+  prose. Technical (feature-gate names, defaults, stages, versions, behavior claims) stays back
+  until it is verified. Mixing the two buries the claims that need scrutiny under dozens of
+  whitespace fixes.
+- **Every technical comment tags the owner** — the KEP author from `kep.yaml`, the owning SIG's
+  leads from `sigs.yaml`, or the implementation PR's author. Pull handles from that metadata, not
+  from memory, and cite the source (`file:line` in `kubernetes/kubernetes`, or the KEP section)
+  for any claim you assert or correct — including your own replacement wording.
 
 ## Sneak-peek & release-comms writing lessons (empirical, from the v1.37 sneak-peek review — [kubernetes/website#56573](https://github.com/kubernetes/website/pull/56573))
 

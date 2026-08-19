@@ -201,3 +201,63 @@ Run this before requesting review. It is where most of the 330+ threads came fro
     [release-blog template](https://github.com/kubernetes/sig-release/blob/master/release-team/role-handbooks/communications/templates/release-blog.md)
     still carries the stale wording twice — fix it there too rather than re-inheriting it next
     cycle.
+
+## Reviewing an announcement: separate cosmetic from technical
+
+When you review someone else's announcement — especially with tooling that posts many inline
+suggestions at once — sort every change into one of two piles **before** posting anything. Mixing
+them buries the claims that need scrutiny under dozens of whitespace fixes, and the trivial ones
+can no longer be bulk-applied because a reviewer has to stop and think at each interleaved
+technical claim.
+
+**Cosmetic / formatting** — safe to apply on sight, no domain knowledge required:
+
+- whitespace, trailing spaces on headings, line rewraps, blank lines mid-paragraph
+- heading case, heading anchor ids (`{#some-anchor}`)
+- backticks on component and tool names (`kubelet`, `kube-proxy`, `nftables`, `etcd`)
+- emphasis markers, including a `_pair_` that spans a line break
+- broken link syntax — `[SIG CLI] (url)` → `[SIG CLI](url)`, markdown links split across lines
+- typos and grammar — `pn-place` → `in-place`, `anddisabling` → `and disabling`, tense fixes
+- naming consistency — `cgroup` → `cgroups`, `1.37` → `v1.37`, `Cluster Trust Bundles` →
+  `ClusterTrustBundles`
+- paragraph moves where the wording is unchanged
+
+**Technical** — anything that asserts or alters a fact: feature-gate names, defaults and stages,
+version numbers, behavior descriptions, new sentences or whole sections. These are not review
+nits; each one is a claim that has to be proved before it is posted.
+
+A mechanical test that classifies most changes correctly: strip backticks, emphasis markers and
+punctuation from both sides, then compare the **word sequences**. Identical sequence → cosmetic.
+Different → technical, unless the only difference is one of the trivial substitutions listed above.
+
+Post the cosmetic pile as pure ```suggestion blocks with no prose — they are self-explanatory, and
+prose around them only slows the author down. Keep the technical pile out of the PR until each
+claim is verified and the right person is tagged (below).
+
+## Technical review: always tag the owner
+
+**Never post a technical suggestion without naming the person who owns that feature.** A style
+reviewer rewriting a paragraph about someone else's feature gate is guessing, and guesses that
+look authoritative are worse than no comment. Every technical comment names at least one of:
+
+1. the **KEP author(s)** — from `authors:` in the KEP's `kep.yaml` in `kubernetes/enhancements`
+2. the **owning SIG's leads** — from `sigs.yaml`, when the KEP authors are unresponsive
+3. the **feature author** — whoever wrote the implementation PR, found via the CHANGELOG entry or
+   `git log` on the relevant package
+
+Pull the handles from that metadata, never from memory. One comment per feature section, on the
+section heading, so replies land in context.
+
+This matters because upstream source and the feature owner can disagree, and you need them on the
+thread to resolve it. In #56990 a reviewer stated a route-controller feature had "moved to beta
+now"; `pkg/features/kube_features.go`, the `controller-manager` staging package, `CHANGELOG-1.35.md`
+and this site's own feature-gate page all said Alpha since v1.35, default false. The code wins for
+what you write, but the owner is the one who confirms whether a promotion landed somewhere the
+gate table doesn't yet reflect — so tag them and say which sources you checked.
+
+When you correct a technical claim, cite the evidence in the comment: `file:line` in
+`kubernetes/kubernetes`, or the KEP section. Pin the reference to a commit SHA when you link it.
+And verify your own replacement text the same way — three suggestions in #56990 had to be
+withdrawn after checking: a feature-gate stage taken from the PR description rather than the gate
+table, a "no-op unless the driver opts in" claim contradicted by the scheduler plugin's `Score`
+function, and two error-constant names that did not exist in the codebase at all.
