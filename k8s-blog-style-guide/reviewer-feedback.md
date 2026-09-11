@@ -1,7 +1,6 @@
 # What the blog editor actually flags
 
-Companion to [SKILL.md](SKILL.md). Derived from every review comment by `lmktfy` (Tim
-Bannister, SIG Docs blog editor, formerly `sftim`) on `kubernetes/website` PRs labelled
+Companion to [SKILL.md](SKILL.md). Derived from every review comment by the SIG Docs blog editor on `kubernetes/website` PRs labelled
 `area/blog`: 349 PRs, ~2,900 comments, 2025-01 through 2026-09. Grouped by how often each
 rule came up. Apply this before requesting review; the editor is under capacity and most of
 these are mechanical.

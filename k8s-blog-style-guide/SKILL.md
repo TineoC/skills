@@ -1,6 +1,6 @@
 ---
 name: k8s-blog-style-guide
-description: Use when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements, post-release feature blogs). Covers eligibility, blog-specific style exceptions, front matter and publishing process, release-announcement body conventions (release-announcement.md), and the full catalogue of what the SIG Docs blog editor (lmktfy) flags across ~2,900 review comments on 349 kubernetes/website blog PRs (reviewer-feedback.md) — "we", headings, emphasis, naming, tense, links, example manifests, AI-slop tells.
+description: Use when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements, post-release feature blogs). Covers eligibility, blog-specific style exceptions, front matter and publishing process, release-announcement body conventions (release-announcement.md), and the full catalogue of what SIG Docs blog editors flag across ~2,900 review comments on 349 kubernetes/website blog PRs (reviewer-feedback.md) — "we", headings, emphasis, naming, tense, links, example manifests, AI-slop tells.
 disable-model-invocation: true
 ---
 
@@ -180,7 +180,7 @@ Two rules that decide how review feedback lands, detailed in
   from memory, and cite the source (`file:line` in `kubernetes/kubernetes`, or the KEP section)
   for any claim you assert or correct — including your own replacement wording.
 
-## Sneak-peek & release-comms writing lessons (empirical, from the v1.37 sneak-peek review — [kubernetes/website#56573](https://github.com/kubernetes/website/pull/56573))
+## Sneak-peek & release-comms writing lessons (empirical, from the v1.37 sneak-peek review)
 
 Not in the official guide, but consistent, repeated reviewer feedback across a full review cycle. Verify these still hold against the current cycle's reviewers before assuming — Release Comms conventions evolve release to release.
 
