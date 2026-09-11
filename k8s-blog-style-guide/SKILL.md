@@ -1,6 +1,6 @@
 ---
 name: k8s-blog-style-guide
-description: Kubernetes blog contribution guide — content eligibility, the docs-style-guide exceptions that apply to blog articles ("we" is OK, future tense is OK), front matter conventions, the release-comms process, empirical front matter patterns for release-announcement and sneak-peek posts, and (in release-announcement.md) the body conventions, pre-review checklist, and the reviewer workflow for splitting cosmetic suggestions from technical claims and tagging KEP/feature owners, sourced from kubernetes.io/docs/contribute/blog. Invoke by name when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements).
+description: Use when drafting, reviewing, or editing a Kubernetes blog post — main blog, contributor blog, or release-comms articles (sneak peeks, release announcements, post-release feature blogs). Covers eligibility, blog-specific style exceptions, front matter and publishing process, release-announcement body conventions (release-announcement.md), and the full catalogue of what the SIG Docs blog editor (lmktfy) flags across ~2,900 review comments on 349 kubernetes/website blog PRs (reviewer-feedback.md) — "we", headings, emphasis, naming, tense, links, example manifests, AI-slop tells.
 disable-model-invocation: true
 ---
 
@@ -8,6 +8,12 @@ Sources:
 - https://kubernetes.io/docs/contribute/blog/blog-guidelines/
 - https://kubernetes.io/docs/contribute/blog/blog-submission/
 - https://kubernetes.io/docs/contribute/blog/post-release-comms/
+
+Companion files:
+- [reviewer-feedback.md](reviewer-feedback.md) — **read first when drafting or reviewing any blog
+  PR.** Every rule the blog editor repeatedly flags, grouped by frequency, with the conventions
+  that changed during 2025–2026 marked.
+- [release-announcement.md](release-announcement.md) — body conventions for `kubernetes-vX-Y-release`.
 
 Blog articles are a **distinct content type** from `/docs/` reference and concept
 pages. They use an editorial, first-person voice and follow a looser style regime.
@@ -99,7 +105,7 @@ Article scheduling:
 - Do set `draft: true` in front matter. The PR merges as an unpublished draft.
 - A small follow-up PR later sets the real `date` and removes `draft: true` to schedule publication.
 
-File placement: `content/en/blog/_posts/YYYY/abbreviated-post-title.md` (or a `YYYY/abbreviated-post-title/index.md` + asset files, if the post has images). Don't put a date in the filename — reviewers set the final filename and date together.
+File placement: `content/en/blog/_posts/YYYY/abbreviated-post-title.md` (or a `YYYY/abbreviated-post-title/index.md` + asset files, if the post has images). Don't put a date in the filename (convention changed in early 2026; PRs that rename files to add a date are rejected). Lowercase filenames.
 
 Front matter example (per the official guide):
 ```yaml
